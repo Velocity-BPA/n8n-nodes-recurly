@@ -8,322 +8,227 @@
 >
 > For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
 
-A comprehensive n8n community node for Recurly subscription management providing 12 resources and 90+ operations for billing automation, subscription lifecycle management, and invoice processing. Includes webhook trigger support for real-time event handling.
+This n8n community node provides comprehensive integration with Recurly's subscription billing platform. With 8 resources implemented, it enables complete subscription lifecycle management including customer accounts, subscription plans, billing, invoicing, and payment processing within your n8n workflows.
 
-![n8n](https://img.shields.io/badge/n8n-community--node-orange)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![n8n Community Node](https://img.shields.io/badge/n8n-Community%20Node-blue)
 ![License](https://img.shields.io/badge/license-BSL--1.1-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
+![Recurly API](https://img.shields.io/badge/Recurly-API%20v2021-orange)
+![Subscription Billing](https://img.shields.io/badge/Billing-Subscriptions-green)
+![Webhooks](https://img.shields.io/badge/Webhooks-Supported-purple)
 
 ## Features
 
-- **Complete API Coverage**: 12 resources with 90+ operations covering all major Recurly functionality
-- **Account Management**: Create, update, and manage customer accounts with billing information
-- **Subscription Lifecycle**: Full control over subscriptions including create, cancel, pause, resume, and terminate
-- **Invoice Processing**: Create invoices, process payments, handle refunds, and download PDFs
-- **Plan Management**: Configure pricing plans with currencies, trials, and add-ons
-- **Coupon System**: Create and manage discount coupons with bulk code generation
-- **Usage-Based Billing**: Track and bill metered usage with measured units
-- **Webhook Triggers**: Real-time notifications for account, subscription, invoice, payment, and dunning events
+- **Complete Account Management** - Create, update, and manage customer accounts with full profile and billing information
+- **Subscription Lifecycle Control** - Handle subscription creation, modifications, upgrades, downgrades, and cancellations
+- **Flexible Plan Configuration** - Manage subscription plans, pricing tiers, and billing cycles
+- **Invoice & Payment Processing** - Generate invoices, process payments, and handle transaction management
+- **Promotional Tools** - Create and manage coupons, discounts, and add-on services
+- **Real-time Webhook Integration** - Receive and process Recurly webhook events for automated workflows
+- **Advanced Filtering & Pagination** - Efficiently query large datasets with built-in pagination support
+- **Error Handling & Retry Logic** - Robust error handling with automatic retry capabilities for failed requests
 
 ## Installation
 
 ### Community Nodes (Recommended)
 
 1. Open n8n
-2. Go to **Settings** > **Community Nodes**
-3. Click **Install**
+2. Go to **Settings** → **Community Nodes**
+3. Click **Install a community node**
 4. Enter `n8n-nodes-recurly`
 5. Click **Install**
 
 ### Manual Installation
 
 ```bash
-# Navigate to your n8n installation directory
 cd ~/.n8n
-
-# Install the package
 npm install n8n-nodes-recurly
 ```
 
 ### Development Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/Velocity-BPA/n8n-nodes-recurly.git
 cd n8n-nodes-recurly
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
-
-# Create symlink to n8n custom nodes directory
 mkdir -p ~/.n8n/custom
 ln -s $(pwd) ~/.n8n/custom/n8n-nodes-recurly
-
-# Restart n8n
+n8n start
 ```
 
 ## Credentials Setup
 
-To use this node, you need to configure Recurly API credentials:
-
-| Property | Description |
-|----------|-------------|
-| **API Key** | Your Recurly private API key (found in Integrations > API Credentials) |
-| **Subdomain** | Your Recurly subdomain (e.g., `yourcompany` from `yourcompany.recurly.com`) |
-
-### Getting Your API Key
-
-1. Log in to your Recurly account
-2. Navigate to **Integrations** > **API Credentials**
-3. Copy your **Private API Key**
-4. Never share or expose this key publicly
+| Field | Description | Required |
+|-------|-------------|----------|
+| API Key | Your Recurly API key found in the Recurly admin panel under Developer → API Credentials | Yes |
+| Environment | Select between Sandbox (testing) or Production environment | Yes |
+| Site ID | Your Recurly site identifier (subdomain) | Yes |
 
 ## Resources & Operations
 
-### Account
+### 1. Accounts
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a new customer account |
-| Get | Retrieve account by ID or code |
-| Get Many | List accounts with filtering |
-| Update | Modify account information |
-| Delete | Deactivate an account |
-| Reopen | Reactivate a closed account |
-| Get Balance | Retrieve account balance |
-| Get Billing Info | Get billing information |
-| Update Billing Info | Update payment details |
+| Create | Create a new customer account with billing information |
+| Get | Retrieve account details by account code or ID |
+| Update | Update account information and billing details |
+| List | List all accounts with filtering and pagination |
+| Delete | Close or delete an account |
+| Get Balance | Retrieve current account balance and outstanding amounts |
+| Reactivate | Reactivate a closed account |
 
-### Subscription
+### 2. Subscriptions
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a new subscription |
-| Get | Retrieve subscription by ID |
-| Get Many | List subscriptions with filtering |
-| Update | Modify subscription settings |
-| Cancel | Cancel a subscription |
-| Reactivate | Reactivate canceled subscription |
-| Pause | Pause subscription billing |
-| Resume | Resume paused subscription |
-| Terminate | Immediately terminate subscription |
-| Postpone | Postpone next renewal date |
+| Create | Create a new subscription for an account |
+| Get | Retrieve subscription details by UUID |
+| Update | Modify subscription settings, plan, or add-ons |
+| List | List subscriptions with filtering options |
+| Cancel | Cancel a subscription immediately or at period end |
+| Reactivate | Reactivate a canceled subscription |
+| Change Plan | Upgrade or downgrade subscription plan |
+| Pause | Temporarily pause a subscription |
+| Resume | Resume a paused subscription |
 
-### Plan
+### 3. Plans
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a new pricing plan |
-| Get | Retrieve plan by ID or code |
-| Get Many | List all plans |
-| Update | Modify plan details |
-| Delete | Remove a plan |
+| Create | Create a new subscription plan |
+| Get | Retrieve plan details by plan code |
+| Update | Update plan pricing and settings |
+| List | List all available plans |
+| Delete | Remove a plan (if not in use) |
+| Add Add-On | Associate add-ons with a plan |
+| Remove Add-On | Remove add-ons from a plan |
 
-### Invoice
+### 4. Invoices
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a charge invoice |
-| Get | Retrieve invoice by ID |
-| Get Many | List invoices with filtering |
-| Collect | Attempt payment collection |
-| Mark Paid | Mark invoice as paid |
-| Mark Failed | Mark collection as failed |
-| Void | Void an invoice |
-| Refund | Refund an invoice |
-| Get PDF | Download invoice as PDF |
+| Create | Generate a new invoice for an account |
+| Get | Retrieve invoice details and line items |
+| List | List invoices with date and status filters |
+| Mark Paid | Mark an invoice as paid manually |
+| Mark Failed | Mark an invoice collection as failed |
+| Collect | Attempt to collect payment on an invoice |
+| Refund | Issue a refund for a paid invoice |
+| Get PDF | Retrieve invoice PDF document |
 
-### Transaction
+### 5. Transactions
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a manual transaction |
-| Get | Retrieve transaction by ID |
-| Get Many | List transactions |
-| Refund | Refund a transaction |
-| Void | Void a transaction |
+| Create | Process a one-time transaction |
+| Get | Retrieve transaction details by UUID |
+| List | List transactions with filtering options |
+| Refund | Issue a full or partial refund |
+| Void | Void an authorized transaction |
 
-### Coupon
+### 6. Coupons
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a new coupon |
-| Get | Retrieve coupon by ID or code |
-| Get Many | List all coupons |
-| Update | Modify coupon settings |
-| Delete | Deactivate a coupon |
-| Restore | Restore deactivated coupon |
-| Generate Codes | Generate bulk unique codes |
+| Create | Create a new discount coupon |
+| Get | Retrieve coupon details by coupon code |
+| Update | Update coupon settings and restrictions |
+| List | List all coupons with status filters |
+| Deactivate | Deactivate a coupon |
+| Reactivate | Reactivate a deactivated coupon |
+| Generate Codes | Generate unique coupon codes for bulk campaigns |
 
-### Credit Payment
+### 7. AddOns
+
 | Operation | Description |
 |-----------|-------------|
-| Get | Retrieve credit payment by ID |
-| Get Many | List credit payments |
+| Create | Create a new add-on service |
+| Get | Retrieve add-on details by add-on code |
+| Update | Update add-on pricing and settings |
+| List | List all add-ons |
+| Delete | Remove an add-on |
 
-### Line Item
+### 8. Webhooks
+
 | Operation | Description |
 |-----------|-------------|
-| Create | Create pending charge/credit |
-| Get | Retrieve line item by ID |
-| Get Many | List line items for account |
-| Delete | Remove pending line item |
-
-### Add-On
-| Operation | Description |
-|-----------|-------------|
-| Create | Create add-on for a plan |
-| Get | Retrieve add-on by ID |
-| Get Many | List add-ons for plan |
-| Update | Modify add-on details |
-| Delete | Remove add-on from plan |
-
-### Shipping Method
-| Operation | Description |
-|-----------|-------------|
-| Create | Create shipping method |
-| Get | Retrieve shipping method |
-| Get Many | List shipping methods |
-| Update | Modify shipping method |
-| Delete | Deactivate shipping method |
-
-### Measured Unit
-| Operation | Description |
-|-----------|-------------|
-| Create | Create usage unit |
-| Get | Retrieve measured unit |
-| Get Many | List measured units |
-| Update | Modify unit details |
-| Delete | Deactivate measured unit |
-
-### Usage
-| Operation | Description |
-|-----------|-------------|
-| Create | Record usage for billing |
-| Get | Retrieve usage record |
-| Get Many | List usage records |
-| Update | Modify usage record |
-| Delete | Remove usage record |
-
-## Trigger Node
-
-The Recurly Trigger node allows you to receive webhook events from Recurly.
-
-### Supported Events
-
-**Account Events:**
-- Account Created, Updated, Closed
-- Billing Info Updated, Fraud Review
-
-**Subscription Events:**
-- Created, Activated, Modified, Renewed
-- Canceled, Expired, Reactivated
-- Paused, Resumed
-
-**Invoice Events:**
-- Created, Closed, Paid
-- Past Due, Failed, Voided, Reopened
-
-**Payment Events:**
-- Succeeded, Failed, Declined, Refunded
-- Fraud Info Updated
-
-**Dunning Events:**
-- Cycle Started, Cycle Completed
-
-### Webhook Setup
-
-1. Add the Recurly Trigger node to your workflow
-2. Copy the webhook URL from the node
-3. In Recurly, go to **Integrations** > **Webhooks**
-4. Add a new endpoint with your n8n webhook URL
-5. Select the events you want to receive
-6. Save the webhook configuration
+| Validate | Validate webhook signature and payload |
+| Parse | Parse webhook event data into structured format |
+| List Events | Retrieve available webhook event types |
 
 ## Usage Examples
 
-### Create a Customer Account
-
 ```javascript
-// Using the Recurly node with operation "Create" on resource "Account"
-{
-  "accountCode": "customer-123",
+// Create a new customer account
+const accountData = {
+  "code": "customer-12345",
   "email": "customer@example.com",
-  "additionalFields": {
-    "firstName": "John",
-    "lastName": "Doe",
-    "company": "Acme Inc"
+  "first_name": "John",
+  "last_name": "Doe",
+  "billing_info": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "number": "4111111111111111",
+    "month": "12",
+    "year": "2025",
+    "cvv": "123"
   }
-}
+};
 ```
 
-### Create a Subscription
-
 ```javascript
-// Using the Recurly node with operation "Create" on resource "Subscription"
-{
-  "planCode": "monthly-pro",
-  "accountId": "acct_xxxxx",
+// Create a subscription with add-ons
+const subscriptionData = {
+  "account_code": "customer-12345",
+  "plan_code": "premium-monthly",
   "currency": "USD",
-  "additionalFields": {
-    "quantity": 1,
-    "autoRenew": true
-  }
-}
+  "subscription_add_ons": [
+    {
+      "add_on_code": "extra-storage",
+      "quantity": 2
+    }
+  ]
+};
 ```
 
-### Apply a Coupon to Subscription
+```javascript
+// Apply a coupon to an existing subscription
+const couponData = {
+  "coupon_code": "SAVE20",
+  "subscription_uuid": "sub_abc123def456"
+};
+```
 
 ```javascript
-// When creating a subscription
-{
-  "planCode": "annual-plan",
-  "accountId": "acct_xxxxx",
+// Process a one-time transaction
+const transactionData = {
+  "account_code": "customer-12345",
+  "amount_in_cents": 2500,
   "currency": "USD",
-  "additionalFields": {
-    "couponCodes": "SUMMER20, LOYALTY10"
-  }
-}
+  "description": "One-time service fee"
+};
 ```
 
 ## Error Handling
 
-The node provides detailed error messages from Recurly's API:
-
-| Error Type | Description |
-|------------|-------------|
-| `validation` | Invalid input parameters |
-| `not_found` | Resource not found |
-| `unauthorized` | Invalid API credentials |
-| `forbidden` | Access denied |
-| `too_many_requests` | Rate limit exceeded |
-
-## Security Best Practices
-
-1. **Never expose your API key** - Store credentials securely in n8n
-2. **Use sandbox for testing** - Test workflows with Recurly sandbox before production
-3. **Verify webhooks** - Enable subdomain verification on trigger nodes
-4. **Monitor rate limits** - Recurly allows 2000 requests/minute (varies by plan)
+| Error | Description | Solution |
+|-------|-------------|----------|
+| 401 Unauthorized | Invalid API key or credentials | Verify API key and site ID in credentials |
+| 404 Not Found | Resource doesn't exist | Check account codes, plan codes, or UUIDs |
+| 422 Validation Error | Invalid data in request | Review required fields and data formats |
+| 429 Rate Limit | Too many requests | Implement delays between requests |
+| 500 Server Error | Recurly service unavailable | Retry request after delay |
+| Network Timeout | Request timed out | Check network connection and retry |
 
 ## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
-
-# Run tests
 npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Lint code
 npm run lint
-
-# Fix lint issues
-npm run lint:fix
-
-# Watch mode for development
 npm run dev
 ```
 
@@ -343,28 +248,22 @@ Permitted for personal, educational, research, and internal business use.
 ### Commercial Use
 Use of this node within any SaaS, PaaS, hosted platform, managed service, or paid automation offering requires a commercial license.
 
-For licensing inquiries:
-**licensing@velobpa.com**
+For licensing inquiries: **licensing@velobpa.com**
 
 See [LICENSE](LICENSE), [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md), and [LICENSING_FAQ.md](LICENSING_FAQ.md) for details.
 
 ## Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! Please ensure:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Code follows existing style conventions
+2. All tests pass (`npm test`)
+3. Linting passes (`npm run lint`)
+4. Documentation is updated for new features
+5. Commit messages are descriptive
 
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-recurly/issues)
-- **Documentation**: [Recurly API Docs](https://recurly.com/developers/api/)
-- **n8n Community**: [n8n Community Forum](https://community.n8n.io/)
-
-## Acknowledgments
-
-- [Recurly](https://recurly.com) for their excellent subscription management platform and API documentation
-- [n8n](https://n8n.io) for the powerful workflow automation platform
+- **Recurly API Documentation**: [https://developers.recurly.com/api/v2021-02-25/](https://developers.recurly.com/api/v2021-02-25/)
+- **Recurly Developer Resources**: [https://developers.recurly.com/](https://developers.recurly.com/)
