@@ -3,26 +3,34 @@
     "target": "es2019",
     "lib": ["es2019"],
     "module": "commonjs",
-    "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./",
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
     "declaration": true,
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "inlineSourceMap": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "nodes/**/*",
-    "credentials/**/*"
+    "credentials/**/*",
+    "nodes/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts"
+    "node_modules/**/*",
+    "dist/**/*"
   ]
 }
