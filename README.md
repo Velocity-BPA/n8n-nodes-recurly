@@ -8,25 +8,25 @@
 >
 > For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
 
-This n8n community node provides comprehensive integration with Recurly's subscription billing platform. With 8 resources implemented, it enables complete subscription lifecycle management including customer accounts, subscription plans, billing, invoicing, and payment processing within your n8n workflows.
+A comprehensive n8n community node for Recurly's subscription billing platform. Manage 7 core resources including accounts, subscriptions, invoices, plans, transactions, coupons, and webhooks with full CRUD operations and advanced subscription management capabilities.
 
 ![n8n Community Node](https://img.shields.io/badge/n8n-Community%20Node-blue)
 ![License](https://img.shields.io/badge/license-BSL--1.1-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
-![Recurly API](https://img.shields.io/badge/Recurly-API%20v2021-orange)
-![Subscription Billing](https://img.shields.io/badge/Billing-Subscriptions-green)
-![Webhooks](https://img.shields.io/badge/Webhooks-Supported-purple)
+![Recurly API](https://img.shields.io/badge/Recurly-API%20v3-orange)
+![Subscription Management](https://img.shields.io/badge/Subscription-Management-green)
+![Billing Automation](https://img.shields.io/badge/Billing-Automation-purple)
 
 ## Features
 
-- **Complete Account Management** - Create, update, and manage customer accounts with full profile and billing information
-- **Subscription Lifecycle Control** - Handle subscription creation, modifications, upgrades, downgrades, and cancellations
-- **Flexible Plan Configuration** - Manage subscription plans, pricing tiers, and billing cycles
-- **Invoice & Payment Processing** - Generate invoices, process payments, and handle transaction management
-- **Promotional Tools** - Create and manage coupons, discounts, and add-on services
-- **Real-time Webhook Integration** - Receive and process Recurly webhook events for automated workflows
-- **Advanced Filtering & Pagination** - Efficiently query large datasets with built-in pagination support
-- **Error Handling & Retry Logic** - Robust error handling with automatic retry capabilities for failed requests
+- **Complete Account Management** - Create, update, retrieve, and manage customer accounts with billing information
+- **Subscription Lifecycle Control** - Full subscription operations including creation, modification, cancellation, and reactivation
+- **Invoice Operations** - Generate, retrieve, update invoices and handle payment processing
+- **Plan Management** - Create and manage subscription plans with flexible pricing models
+- **Transaction Processing** - Handle payments, refunds, and transaction tracking
+- **Coupon System** - Create and manage discount coupons and promotional codes
+- **Webhook Integration** - Set up and manage webhooks for real-time event notifications
+- **Error Handling & Validation** - Comprehensive error handling with detailed validation messages
 
 ## Installation
 
@@ -61,166 +61,158 @@ n8n start
 
 | Field | Description | Required |
 |-------|-------------|----------|
-| API Key | Your Recurly API key found in the Recurly admin panel under Developer → API Credentials | Yes |
-| Environment | Select between Sandbox (testing) or Production environment | Yes |
-| Site ID | Your Recurly site identifier (subdomain) | Yes |
+| API Key | Your Recurly API key from the developer section | Yes |
+| Subdomain | Your Recurly subdomain (e.g., 'yourcompany' for yourcompany.recurly.com) | Yes |
+| Environment | Select 'sandbox' for testing or 'production' for live operations | Yes |
 
 ## Resources & Operations
 
-### 1. Accounts
+### 1. Account
 
 | Operation | Description |
 |-----------|-------------|
 | Create | Create a new customer account with billing information |
-| Get | Retrieve account details by account code or ID |
-| Update | Update account information and billing details |
-| List | List all accounts with filtering and pagination |
-| Delete | Close or delete an account |
-| Get Balance | Retrieve current account balance and outstanding amounts |
-| Reactivate | Reactivate a closed account |
+| Get | Retrieve account details by account ID or code |
+| Update | Update account information including billing details |
+| Delete | Close or delete a customer account |
+| List | Retrieve a list of accounts with filtering options |
+| Get Balance | Get the current account balance |
 
-### 2. Subscriptions
+### 2. Subscription
 
 | Operation | Description |
 |-----------|-------------|
 | Create | Create a new subscription for an account |
-| Get | Retrieve subscription details by UUID |
-| Update | Modify subscription settings, plan, or add-ons |
-| List | List subscriptions with filtering options |
-| Cancel | Cancel a subscription immediately or at period end |
-| Reactivate | Reactivate a canceled subscription |
-| Change Plan | Upgrade or downgrade subscription plan |
+| Get | Retrieve subscription details by ID |
+| Update | Modify subscription settings and billing information |
+| Cancel | Cancel a subscription with optional cancellation date |
+| Reactivate | Reactivate a cancelled subscription |
 | Pause | Temporarily pause a subscription |
 | Resume | Resume a paused subscription |
+| List | List subscriptions with filtering and pagination |
 
-### 3. Plans
-
-| Operation | Description |
-|-----------|-------------|
-| Create | Create a new subscription plan |
-| Get | Retrieve plan details by plan code |
-| Update | Update plan pricing and settings |
-| List | List all available plans |
-| Delete | Remove a plan (if not in use) |
-| Add Add-On | Associate add-ons with a plan |
-| Remove Add-On | Remove add-ons from a plan |
-
-### 4. Invoices
+### 3. Invoice
 
 | Operation | Description |
 |-----------|-------------|
 | Create | Generate a new invoice for an account |
-| Get | Retrieve invoice details and line items |
+| Get | Retrieve invoice details by ID |
+| Update | Update invoice information and line items |
 | List | List invoices with date and status filters |
 | Mark Paid | Mark an invoice as paid manually |
-| Mark Failed | Mark an invoice collection as failed |
-| Collect | Attempt to collect payment on an invoice |
-| Refund | Issue a refund for a paid invoice |
-| Get PDF | Retrieve invoice PDF document |
+| Mark Failed | Mark an invoice collection attempt as failed |
+| Void | Void an existing invoice |
 
-### 5. Transactions
+### 4. Plan
 
 | Operation | Description |
 |-----------|-------------|
-| Create | Process a one-time transaction |
-| Get | Retrieve transaction details by UUID |
+| Create | Create a new subscription plan with pricing |
+| Get | Retrieve plan details by ID or code |
+| Update | Update plan information and pricing |
+| Delete | Delete a plan (if not in use) |
+| List | List all available plans |
+| Get Add-ons | Retrieve add-ons associated with a plan |
+
+### 5. Transaction
+
+| Operation | Description |
+|-----------|-------------|
+| Create | Process a new transaction or payment |
+| Get | Retrieve transaction details by ID |
 | List | List transactions with filtering options |
-| Refund | Issue a full or partial refund |
-| Void | Void an authorized transaction |
+| Refund | Process a refund for an existing transaction |
+| Void | Void a pending transaction |
 
-### 6. Coupons
+### 6. Coupon
 
 | Operation | Description |
 |-----------|-------------|
-| Create | Create a new discount coupon |
-| Get | Retrieve coupon details by coupon code |
+| Create | Create a new coupon with discount rules |
+| Get | Retrieve coupon details by ID or code |
 | Update | Update coupon settings and restrictions |
-| List | List all coupons with status filters |
-| Deactivate | Deactivate a coupon |
-| Reactivate | Reactivate a deactivated coupon |
-| Generate Codes | Generate unique coupon codes for bulk campaigns |
+| Delete | Delete an unused coupon |
+| List | List all coupons with filtering |
+| Restore | Restore a previously deleted coupon |
 
-### 7. AddOns
-
-| Operation | Description |
-|-----------|-------------|
-| Create | Create a new add-on service |
-| Get | Retrieve add-on details by add-on code |
-| Update | Update add-on pricing and settings |
-| List | List all add-ons |
-| Delete | Remove an add-on |
-
-### 8. Webhooks
+### 7. Webhook
 
 | Operation | Description |
 |-----------|-------------|
-| Validate | Validate webhook signature and payload |
-| Parse | Parse webhook event data into structured format |
-| List Events | Retrieve available webhook event types |
+| Create | Set up a new webhook endpoint |
+| Get | Retrieve webhook configuration by ID |
+| Update | Update webhook settings and endpoints |
+| Delete | Remove a webhook configuration |
+| List | List all configured webhooks |
+| Test | Send a test webhook to verify connectivity |
 
 ## Usage Examples
 
 ```javascript
 // Create a new customer account
-const accountData = {
-  "code": "customer-12345",
-  "email": "customer@example.com",
+{
+  "code": "customer_001",
+  "email": "john.doe@example.com",
   "first_name": "John",
   "last_name": "Doe",
   "billing_info": {
     "first_name": "John",
     "last_name": "Doe",
-    "number": "4111111111111111",
-    "month": "12",
-    "year": "2025",
-    "cvv": "123"
+    "address1": "123 Main St",
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94105",
+    "country": "US"
   }
-};
+}
 ```
 
 ```javascript
-// Create a subscription with add-ons
-const subscriptionData = {
-  "account_code": "customer-12345",
-  "plan_code": "premium-monthly",
+// Create a subscription for an existing account
+{
+  "account_code": "customer_001",
+  "plan_code": "monthly_premium",
   "currency": "USD",
-  "subscription_add_ons": [
-    {
-      "add_on_code": "extra-storage",
-      "quantity": 2
-    }
-  ]
-};
+  "unit_amount_in_cents": 2999,
+  "quantity": 1,
+  "starts_at": "2024-01-01T00:00:00Z"
+}
 ```
 
 ```javascript
-// Apply a coupon to an existing subscription
-const couponData = {
-  "coupon_code": "SAVE20",
-  "subscription_uuid": "sub_abc123def456"
-};
+// Create a discount coupon
+{
+  "coupon_code": "WELCOME20",
+  "name": "Welcome Discount",
+  "discount_type": "percent",
+  "discount_percent": 20,
+  "applies_to_all_plans": true,
+  "max_redemptions": 100,
+  "applies_until": "2024-12-31T23:59:59Z"
+}
 ```
 
 ```javascript
-// Process a one-time transaction
-const transactionData = {
-  "account_code": "customer-12345",
-  "amount_in_cents": 2500,
+// Process a transaction
+{
+  "account_code": "customer_001",
+  "amount_in_cents": 5000,
   "currency": "USD",
-  "description": "One-time service fee"
-};
+  "payment_method": "credit_card",
+  "description": "One-time payment for services"
+}
 ```
 
 ## Error Handling
 
 | Error | Description | Solution |
 |-------|-------------|----------|
-| 401 Unauthorized | Invalid API key or credentials | Verify API key and site ID in credentials |
-| 404 Not Found | Resource doesn't exist | Check account codes, plan codes, or UUIDs |
-| 422 Validation Error | Invalid data in request | Review required fields and data formats |
-| 429 Rate Limit | Too many requests | Implement delays between requests |
-| 500 Server Error | Recurly service unavailable | Retry request after delay |
-| Network Timeout | Request timed out | Check network connection and retry |
+| Invalid API Key | Authentication failed with provided credentials | Verify API key and subdomain in credentials |
+| Account Not Found | Specified account ID or code doesn't exist | Check account code/ID or create account first |
+| Subscription Already Cancelled | Attempting to cancel an already cancelled subscription | Check subscription status before cancellation |
+| Plan Not Found | Referenced plan code doesn't exist | Verify plan exists or create plan first |
+| Invalid Payment Method | Payment method validation failed | Check billing information and payment method details |
+| Rate Limit Exceeded | Too many API requests in short timeframe | Implement delays between requests or retry logic |
 
 ## Development
 
@@ -265,5 +257,5 @@ Contributions are welcome! Please ensure:
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-recurly/issues)
-- **Recurly API Documentation**: [https://developers.recurly.com/api/v2021-02-25/](https://developers.recurly.com/api/v2021-02-25/)
-- **Recurly Developer Resources**: [https://developers.recurly.com/](https://developers.recurly.com/)
+- **Recurly API Documentation**: [Recurly Developer Docs](https://developers.recurly.com/)
+- **Recurly Community**: [Recurly Community Forum](https://support.recurly.com/)
